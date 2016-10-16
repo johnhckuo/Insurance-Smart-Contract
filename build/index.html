@@ -1,0 +1,65 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Oraclize test</title>
+  <link href="./app.css" rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="./bootstrap.css" media="screen" title="no title">
+  <script src="./app.js"></script>
+  <script type="text/javascript" src='./jquery.js'></script>
+  <script type="text/javascript" src='./bootstrap.min.js'></script>
+</head>
+<body>
+  <div class="container">
+
+
+<div class="page-header"><h1>Insurance contract examples</h1><p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim</p>
+  <button type="button" class="btn btn-primary" onclick="receive()" >Pay (100 NTD)</button>
+  <button type="button" class="btn btn-info" onclick="queryBalance()" data-toggle="modal" data-target="#myModal">Balance query</button>
+
+</div>
+  <h3>註冊</h3>
+  <button type="button"  onclick="init()" class="btn btn-success" data-toggle="modal" data-target="#myModal">建立合約</button>
+  <button type="button"  class="btn btn-default" onclick="addTarget()"  data-toggle="modal" data-target="#myModal">新增 保戶</button>
+  <button type="button"  class="btn btn-default" onclick="addCustomer()"  data-toggle="modal" data-target="#myModal">新增 要保人</button>
+  <button type="button"  class="btn btn-default" onclick="addBeneficiary()"  data-toggle="modal" data-target="#myModal">新增 受益人</button>
+  <button type="button"  class="btn btn-default" onclick="getCustomer()"  data-toggle="modal" data-target="#myModal">查詢客戶資料</button>
+  <hr>
+  <h3>Contract info</h3>
+  <button type="button" class="btn btn-info" onclick="getDefinition()"  data-toggle="modal" data-target="#myModal">查看契約說明</button>
+  <hr>
+  <h3>User obligaitons</h3>
+  <button type="button" class="btn btn-info" onclick="getObligationStatus()"  data-toggle="modal" data-target="#myModal">查詢客戶義務</button>
+  <hr>
+  <h3>User rights</h3>
+  <button type="button" class="btn btn-info" onclick="getRightStatus()"  data-toggle="modal" data-target="#myModal">查詢客戶權利</button>
+  <hr>
+  <h3>Destroy contract</h3>
+  <button type="button" onclick="getRightStatus()" class="btn btn-danger" data-toggle="modal" data-target="#myModal">終止契約</button>
+
+
+  <!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title" id='consoleTitle'>通知</h4>
+      </div>
+      <div class="modal-body" id='console'>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div>
+</body>
+</html>
