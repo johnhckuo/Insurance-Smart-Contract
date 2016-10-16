@@ -22,12 +22,6 @@ function receive(){
   test.receive(500, {from:account}).then(console.log);
 }
 
-function payment(){
-
-}
-// function freeze(){
-//   test.freezeRight("payment", account, {from:account});
-// }
 function getObligationStatus(){
   var obligationCount;
   test.getObligationStatus({from:account}).then(function(result){
@@ -97,6 +91,8 @@ function getCustomer(){
 function init(event){
   Test.new(100, { from: accounts[0] }).then(function(obj){
     test = obj;
+
+    //傾聽事件
     test.createTime().watch(function(error, result){
       if (!error)
         alert("contract created!");
@@ -121,25 +117,14 @@ function init(event){
         printConsole(result.args);
     });
 
-  //   var event = test.allEvents().watch({}, '');
-  //   // or use conference.Deposit() or .Refund()
-  //   event.watch(function (error, result) {
-  //     if (error) {
-  //       console.log("Error: " + error);
-  //     } else {
-  //       alert("Event: " + result);
-  //   }
-  // });
+    test.contractDestroy().watch(function(error, result){
+      if (!error)
+        printConsole("合約終止");
+    });
 
       console.log(test.address)
     printConsole("<p>合約位址："+test.address+"</p><p>交易Hash："+test.transactionHash+"</p>", "建立成功");
   });
-
-
-
-
-
-
 }
 
 function printConsole(output,title){
@@ -155,6 +140,10 @@ function hex2a(hexx) {
     for (var i = 0; i < hex.length; i += 2)
         str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
     return str;
+}
+
+function destroy(){
+  test.destroy(100, {from:account}).then(printConsole);
 }
 
 

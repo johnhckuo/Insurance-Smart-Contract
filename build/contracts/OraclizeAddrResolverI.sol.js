@@ -338,7 +338,7 @@ var Web3 = require("web3");
       }
     ],
     "events": {},
-    "updated_at": 1476624079342,
+    "updated_at": 1476625349912,
     "links": {}
   }
 };

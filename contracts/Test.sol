@@ -15,14 +15,10 @@ contract Test is usingOraclize {
   event paid();
   event userReceive();
   event paymentSuccess(string);
-
-  string public ETHXBT;
-
+  event contractDestroy();
 
   mapping (address => uint) public balance;
   bytes32 definition = "Yo, this is a simple contract";
-
-
 
   uint obligationsLength = 3;
   uint rightsLength = 3 ;
@@ -33,13 +29,18 @@ contract Test is usingOraclize {
 
   address public customerADDR;
   address companyADDR;
+
+  //要保人義務執行狀態
   bool fulfill = false;
+  //保戶狀態變數
   bool alive = true;
+  //合約狀態變數
   bool destroyed = false;
 
   mapping (address => mapping(bytes32 => bool)) rights;
   mapping (address => mapping(bytes32 => bool)) obligations;
 
+  //要保人
   struct Customer{
     bytes32 firstName;
     bytes32 lastName;
@@ -50,13 +51,13 @@ contract Test is usingOraclize {
     mapping (uint => bytes32) rightsIndex;
     mapping (uint => bytes32) obligationsIndex;
   }
-
+  //受益人
   struct Beneficiary{
     bytes32 firstName;
     bytes32 lastName;
     address account;
   }
-
+  //被保戶
   struct Target{
     bytes32 firstName;
     bytes32 lastName;
@@ -64,23 +65,26 @@ contract Test is usingOraclize {
     uint age;
     bool status;
   }
+
   Customer customer;
   Target target;
   Beneficiary beneficiary;
 
+
+  //--------constructor----------
   function Test(uint _createDate){
     OAR = OraclizeAddrResolverI(0x607b45e524311dd6857855c98adfecbe3cd1b945);
     oraclize_setProof(proofType_TLSNotary | proofStorage_IPFS);
+
+    customerADDR = msg.sender;
     balance[customerADDR] = 100000000;
-    balance[companyADDR] = 0;
+
     customerADDR = msg.sender;
     createDate = _createDate;
 
     checkAlive(3600);
 
   }
-
-
 
   //--------contract definition----------
 
@@ -106,12 +110,9 @@ contract Test is usingOraclize {
     }
   }
 
-
-
   function queryBalance() constant returns(uint){
     return balance[customerADDR];
   }
-
 
   //------right--------
   function rightInit(){
@@ -150,7 +151,6 @@ contract Test is usingOraclize {
   }
 
 
-
   function freezeObligation(bytes32 obligation, address incomeADDR){
     obligations[incomeADDR][obligation] = false;
   }
@@ -174,13 +174,13 @@ contract Test is usingOraclize {
   function destroy(uint currentTime) returns(bool){
     if (msg.sender == customerADDR && discard(currentTime)){
         //suicide(customerADDR);
-        destroyed = true;
+        destroyed = true;    //contract status!
         balance[customerADDR] += customerPaid;
         balance[customerADDR] -= companyPaid;
 
         balance[companyADDR] -= customerPaid;
         balance[companyADDR] += companyPaid;
-
+        contractDestroy();
     }
   }
 
@@ -200,6 +200,7 @@ contract Test is usingOraclize {
   //-------checkAlive---------
 
   function checkAlive(uint interval){
+    //just sample URL
     oraclize_query(interval, "URL", "json(https://api.kraken.com/0/public/Ticker?pair=ETHXBT).result.XETHXXBT.c.0");
 
   }
@@ -209,7 +210,6 @@ contract Test is usingOraclize {
   function __callback(bytes32 myid, string result, bytes proof) {
       if (msg.sender != oraclize_cbAddress()) throw;
       trigger();
-      ETHXBT = result;
       if (StringUtils.equal(result, "dead")){
         alive = true;
         return;
@@ -267,7 +267,7 @@ contract Test is usingOraclize {
 
   //通知客戶繳錢
   function paymentNotify(){
-    if (!fulfill && alive){
+    if (!fulfill && alive && !destroyed){
       pay();
 
     }
