@@ -16,6 +16,8 @@ contract Test is usingOraclize {
   event userReceive();
   event paymentSuccess(string);
   event contractDestroy();
+  // for demo 模擬死亡用事件
+  event dead();
 
   mapping (address => uint) public balance;
   bytes32 definition = "Yo, this is a simple contract";
@@ -286,5 +288,12 @@ contract Test is usingOraclize {
         paid();
       }
     }
+  }
+
+  // for demo 模擬死亡用事件
+  function die() {
+    alive = false;
+    target.status = true;
+    dead();
   }
 }
